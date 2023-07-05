@@ -23,6 +23,8 @@ If you'd like to help out, please see [CONTRIBUTING.md](CONTRIBUTING.md).
 * Next release:
   - *Breaking change*: remove support for SCT stapling.  Ecosystem support for this is rare compared to
     inclusion of SCTs in certificates.
+  - *Breaking change*: `RootCertStore::add_parsable_certificates` now takes a
+    `impl Iterator<Item = &'cert [u8]>`.
 * Release 0.21.2 (2023-06-14)
   - Bump MSRV to 1.60 to track similar change in dependencies.
   - Differentiate between unexpected and expected EOF in `Stream` and `OwnedStream`.

@@ -124,16 +124,19 @@ impl RootCertStore {
     /// include ancient or syntactically invalid certificates.
     ///
     /// Returns the number of certificates added, and the number that were ignored.
-    pub fn add_parsable_certificates(&mut self, der_certs: &[impl AsRef<[u8]>]) -> (usize, usize) {
+    pub fn add_parsable_certificates<'cert>(
+        &mut self,
+        der_certs: impl Iterator<Item = &'cert [u8]>,
+    ) -> (usize, usize) {
         let mut valid_count = 0;
         let mut invalid_count = 0;
 
         for der_cert in der_certs {
             #[cfg_attr(not(feature = "logging"), allow(unused_variables))]
-            match self.add_internal(der_cert.as_ref()) {
+            match self.add_internal(der_cert) {
                 Ok(_) => valid_count += 1,
                 Err(err) => {
-                    trace!("invalid cert der {:?}", der_cert.as_ref());
+                    trace!("invalid cert der {:?}", der_cert);
                     debug!("certificate parsing failed: {:?}", err);
                     invalid_count += 1;
                 }

@@ -299,7 +299,12 @@ pub fn finish_client_config(
 ) -> ClientConfig {
     let mut root_store = RootCertStore::empty();
     let mut rootbuf = io::BufReader::new(kt.bytes_for("ca.cert"));
-    root_store.add_parsable_certificates(&rustls_pemfile::certs(&mut rootbuf).unwrap());
+    root_store.add_parsable_certificates(
+        rustls_pemfile::certs(&mut rootbuf)
+            .unwrap()
+            .iter()
+            .map(Vec::as_ref),
+    );
 
     config
         .with_root_certificates(root_store)
@@ -312,7 +317,12 @@ pub fn finish_client_config_with_creds(
 ) -> ClientConfig {
     let mut root_store = RootCertStore::empty();
     let mut rootbuf = io::BufReader::new(kt.bytes_for("ca.cert"));
-    root_store.add_parsable_certificates(&rustls_pemfile::certs(&mut rootbuf).unwrap());
+    root_store.add_parsable_certificates(
+        rustls_pemfile::certs(&mut rootbuf)
+            .unwrap()
+            .iter()
+            .map(Vec::as_ref),
+    );
 
     config
         .with_root_certificates(root_store)
